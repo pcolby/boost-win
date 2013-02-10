@@ -48,9 +48,9 @@ goto :EOF
 :bootstrap
 @echo Bootstrapping %~1
 pushd "%~1"
+echo( && echo using mpi ; >> tools\build\v2\user-config.jam
 call bootstrap.bat
 popd
-::echo( && echo using mpi ; >> tools\build\v2\user-config.jam
 set MPI_JAM=%~1\tools\build\v2\tools\mpi.jam
 set MPI_TMP=%MPI_JAM%.tmp
 if exist "%PROGRAMFILES%\Microsoft HPC Pack 2008 R2" (
