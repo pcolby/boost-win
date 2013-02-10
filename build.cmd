@@ -48,7 +48,6 @@ goto :EOF
 :bootstrap
 @echo Bootstrapping %~1
 pushd "%~1"
-echo( && echo using mpi ; >> tools\build\v2\user-config.jam
 call bootstrap.bat
 popd
 set MPI_JAM=%~1\tools\build\v2\tools\mpi.jam
@@ -60,6 +59,7 @@ if exist "%PROGRAMFILES%\Microsoft HPC Pack 2008 R2" (
       powershell -Command "get-content %MPI_JAM% | ForEach-Object {$_ -replace '(cluster_pack_path.*Inc)lude', '$1'} | set-content %MPI_TMP%" && move /y "%MPI_TMP%" "%MPI_JAM%"
 	)
   )
+  echo( >> "%~1\tools\build\v2\user-config.jam" && echo using mpi ; >> "%~1\tools\build\v2\user-config.jam"
 )
 goto :EOF
 
