@@ -1,7 +1,11 @@
 @echo off
-:: Usage: build.cmd x.y.z mingw|msvc2010 x86|x64
-:: Font: Consolas 12; Layout: 140x70.
+:: Dependancies:
+::  * Microsoft Visual Studio / C++
+::  * Microsoft WinSDK
+::  * Microsoft HPC Pack 2012 Client Utilities Redistributable Package
+::  * HPC Pack SDK (Optional)
 
+set BOOST_TOOLSET=msvc-10.0
 set BOOST_VERSION=1_53_0
 set WIN_SDK_VERSION=7.1
 set ZIP7=%PROGRAMFILES%\7-zip\7z.exe
@@ -44,8 +48,23 @@ goto :EOF
 :bootstrap
 @echo Bootstrapping %~1
 pushd "%~1"
+echo( && echo using mpi ; >> tools\build\v2\user-config.jam
 call bootstrap.bat
 popd
+goto :EOF
+
+:: usage: call:buildBoost boost_dir install_dir x86|x64|ia64 debug|release
+:buildBoost
+if /I "%~3" EQU "ia64" ( set BOOST_ARCH=ia64 ) else set BOOST_ARCH=x86
+if /I "%~3" EQU "x86" ( set BOOST_ADDR=32 ) else set BOOST_ADDR=64
+pushd "%~1"
+b2.exe -d0 --prefix="%~2" architecture=%BOOST_ARCH% address-model=%BOOST_ADDR% toolset=%BOOST_TOOLSET% variant=%~4
+popd
+::link=static,shared threading=single,multi
+::variant=%~2  runtime-link?
+::stage [-j3]
+::build-type=complete 
+::echo b2.exe --prefix=... install
 goto :EOF
 
 :: usage: call:build x86|x64|ia64 debug|release
@@ -56,11 +75,13 @@ set BUILD_DIR=%~dp0build\boost_%BOOST_VERSION%-%~1
 if not exist "%BUILD_DIR%" call:extractSource %BUILD_DIR%
 set BOOST_DIR=%BUILD_DIR%\boost_%BOOST_VERSION%
 if not exist "%BOOST_DIR%\b2.exe" call:bootstrap %BOOST_DIR%
+set INSTALL_DIR=%BUILD_DIR%\install
+call:buildBoost %BOOST_DIR% %INSTALL_DIR% %~1 %~2
 :: @todo
 goto :EOF
 
 :main
 if not exist "%~dp0build" md "%~dp0build"
-call:build x86 release
+::call:build x86 release
 call:build x64 release
 pause
