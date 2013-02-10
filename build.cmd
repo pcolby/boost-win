@@ -2,8 +2,8 @@
 :: Dependancies:
 ::  * Microsoft Visual Studio / C++
 ::  * Microsoft WinSDK
-::  * Microsoft HPC Pack 2012 Client Utilities Redistributable Package
-::  * HPC Pack SDK (Optional)
+::  * Microsoft HPC Pack 2008 R2 MS-MPI Redistributed Package (optional)
+::    * Not the 2012 versions; they don't include the headers / libs.
 
 set BOOST_TOOLSET=msvc-10.0
 set BOOST_VERSION=1_53_0
@@ -48,9 +48,19 @@ goto :EOF
 :bootstrap
 @echo Bootstrapping %~1
 pushd "%~1"
-echo( && echo using mpi ; >> tools\build\v2\user-config.jam
 call bootstrap.bat
 popd
+::echo( && echo using mpi ; >> tools\build\v2\user-config.jam
+set MPI_JAM=%~1\tools\build\v2\tools\mpi.jam
+set MPI_TMP=%MPI_JAM%.tmp
+if exist "%PROGRAMFILES%\Microsoft HPC Pack 2008 R2" (
+  powershell -Command "get-content %MPI_JAM% | ForEach-Object {$_ -replace \"Microsoft Compute Cluster Pack\",\"Microsoft HPC Pack 2008 R2\"} | set-content %MPI_TMP%" && move /y "%MPI_TMP%" "%MPI_JAM%"
+  if not exist "%PROGRAMFILES%\Microsoft HPC Pack 2008 R2\Include" (
+    if  exist "%PROGRAMFILES%\Microsoft HPC Pack 2008 R2\Inc" (
+      powershell -Command "get-content %MPI_JAM% | ForEach-Object {$_ -replace '(cluster_pack_path.*Inc)lude', '$1'} | set-content %MPI_TMP%" && move /y "%MPI_TMP%" "%MPI_JAM%"
+	)
+  )
+)
 goto :EOF
 
 :: usage: call:buildBoost boost_dir install_dir x86|x64|ia64 debug|release
@@ -77,11 +87,10 @@ set BOOST_DIR=%BUILD_DIR%\boost_%BOOST_VERSION%
 if not exist "%BOOST_DIR%\b2.exe" call:bootstrap %BOOST_DIR%
 set INSTALL_DIR=%BUILD_DIR%\install
 call:buildBoost %BOOST_DIR% %INSTALL_DIR% %~1 %~2
-:: @todo
 goto :EOF
 
 :main
 if not exist "%~dp0build" md "%~dp0build"
-::call:build x86 release
-call:build x64 release
+call:build x86 release
+::call:build x64 release
 pause
