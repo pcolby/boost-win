@@ -25,14 +25,21 @@ goto :EOF
 :configureBoost
 @echo ==== Configuring Boost ====
 set SOURCE_DIR=%~dp0source
-set SOURCE_FILE="%SOURCE_DIR%\boost_%BOOST_VERSION%.zip"
+set SOURCE_FILE=%SOURCE_DIR%\boost_%BOOST_VERSION%.zip
 if exist "%SOURCE_DIR%\boost_%BOOST_VERSION%.7z" (
-  set SOURCE_FILE="%SOURCE_DIR%\boost_%BOOST_VERSION%.7z"
+  set SOURCE_FILE=%SOURCE_DIR%\boost_%BOOST_VERSION%.7z
 )
 set BUILD_DIR=%~dp0build\boost_%BOOST_VERSION%-%1
 if not exist "%BUILD_DIR%" (
-  md %BUILD_DIR%
-  "%ZIP7%" x -o"%BUILD_DIR%" "%SOURCE_FILE%"
+  md "%BUILD_DIR%"
+  @echo Extracting "%SOURCE_FILE%" to "%BUILD_DIR%"
+  "%ZIP7%" x -o"%BUILD_DIR%" "%SOURCE_FILE%" > nul
+  if errorlevel 1 (
+    echo Failed to extract "%SOURCE_FILE%"
+	pause
+	rmdir "%BUILD_DIR%"
+	exit errorlevel
+  )
 )
 pushd "%BUILD_DIR%\boost_%BOOST_VERSION%"
 dir
