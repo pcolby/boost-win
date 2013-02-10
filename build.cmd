@@ -15,7 +15,6 @@ goto main
 
 :: usage: call:configureWinSDK x86|x64|ia64 debug|release [/vista^|/xp^|/2003^|/2008^|/win7]
 :configureWinSDK
-@echo ==== Configuring WinSDK %~1 %~2 %~3 ====
 set TARGET_ARCH=/%1
 set MODE=/%2
 if "%3" == "" ( set TARGET_OS=/xp ) else set TARGET_OS=%3
@@ -30,7 +29,6 @@ if exist "%SOURCE_DIR%\boost_%BOOST_VERSION%.7z" (
   set SOURCE_FILE=%SOURCE_DIR%\boost_%BOOST_VERSION%.7z
 )
 if not exist "%~1" (
-  @echo ==== Extracting Boost Source ====
   @echo Extracting "%SOURCE_FILE%" to "%~1"
   "%ZIP7%" x -o"%~1" "%SOURCE_FILE%" > nul
   if errorlevel 1 (
@@ -44,7 +42,7 @@ goto :EOF
 
 :: usage: call:bootstrap boost_dir
 :bootstrap
-@echo ==== Bootstrapping Boost %~1 ====
+@echo Bootstrapping %~1
 pushd "%~1"
 call bootstrap.bat
 popd
@@ -52,6 +50,7 @@ goto :EOF
 
 :: usage: call:build x86|x64|ia64 debug|release
 :build
+@echo ==== Building %~1 %~2 ====
 call:configureWinSDK %~1 %~2
 set BUILD_DIR=%~dp0build\boost_%BOOST_VERSION%-%~1
 if not exist "%BUILD_DIR%" call:extractSource %BUILD_DIR%
