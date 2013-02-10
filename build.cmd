@@ -42,7 +42,7 @@ if not exist "%BUILD_DIR%" (
   )
 )
 pushd "%BUILD_DIR%\boost_%BOOST_VERSION%"
-dir
+call bootstrap.bat
 popd
 goto :EOF
 
