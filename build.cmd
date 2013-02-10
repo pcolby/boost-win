@@ -4,7 +4,6 @@
 
 set BOOST_VERSION=1_53_0
 set WIN_SDK_VERSION=7.1
-
 set ZIP7=%PROGRAMFILES%\7-zip\7z.exe
 
 :: I like to copy %WIN_SDK%\Bin\SetEnv.cmd to %WIN_SDK%\Bin\SetEnvNc.cmd to
@@ -27,16 +26,13 @@ goto :EOF
 @echo ==== Configuring Boost ====
 set SOURCE_DIR=%~dp0source
 set BUILD_DIR=%~dp0build\boost_%BOOST_VERSION%-%1
-echo %BUILD_DIR%
 if not exist "%BUILD_DIR%" (
   md %BUILD_DIR%
   set SOURCE_FILE="%SOURCE_DIR%\boost_%BOOST_VERSION%.zip"
   if exist "%SOURCE_DIR%\boost_%BOOST_VERSION%.7z" (
     set SOURCE_FILE="%SOURCE_DIR%\boost_%BOOST_VERSION%.7z"
   )
-  pushd %BUILD_DIR%
-  "%ZIP7%" x "%SOURCE_FILE%"
-  popd
+  "%ZIP7%" x -o"%BUILD_DIR%" "%SOURCE_FILE%"
 )
 pushd "%BUILD_DIR%\boost_%BOOST_VERSION%"
 dir
