@@ -68,13 +68,8 @@ goto :EOF
 if /I "%~3" EQU "ia64" ( set BOOST_ARCH=ia64 ) else set BOOST_ARCH=x86
 if /I "%~3" EQU "x86" ( set BOOST_ADDR=32 ) else set BOOST_ADDR=64
 pushd "%~1"
-b2.exe -d0 --prefix="%~2" architecture=%BOOST_ARCH% address-model=%BOOST_ADDR% toolset=%BOOST_TOOLSET% variant=%~4
+b2.exe -d0 -j %NUMBER_OF_PROCESSORS% --prefix="%~2" architecture=%BOOST_ARCH% address-model=%BOOST_ADDR% link=shared,static runtime-link=shared threading=multi toolset=%BOOST_TOOLSET% variant=%~4 install
 popd
-::link=static,shared threading=single,multi
-::variant=%~2  runtime-link?
-::stage [-j3]
-::build-type=complete 
-::echo b2.exe --prefix=... install
 goto :EOF
 
 :: usage: call:build x86|x64|ia64 debug|release
@@ -92,5 +87,5 @@ goto :EOF
 :main
 if not exist "%~dp0build" md "%~dp0build"
 call:build x86 release
-::call:build x64 release
+call:build x64 release
 pause
