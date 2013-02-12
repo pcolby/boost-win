@@ -3,7 +3,6 @@
 ::  * Microsoft Visual Studio / C++
 ::  * Microsoft WinSDK
 ::  * Microsoft HPC Pack 2008 R2 MS-MPI Redistributed Package (optional)
-::    * Not the 2012 versions; they don't include the headers / libs.
 
 set BOOST_TOOLSET=msvc-10.0
 set BOOST_VERSION=1_53_0
@@ -68,7 +67,7 @@ goto :EOF
 if /I "%~3" EQU "ia64" ( set BOOST_ARCH=ia64 ) else set BOOST_ARCH=x86
 if /I "%~3" EQU "x86" ( set BOOST_ADDR=32 ) else set BOOST_ADDR=64
 pushd "%~1"
-b2.exe -d0 -j %NUMBER_OF_PROCESSORS% --prefix="%~2" architecture=%BOOST_ARCH% address-model=%BOOST_ADDR% link=shared,static runtime-link=shared threading=multi toolset=%BOOST_TOOLSET% variant=%~4 install
+b2.exe -d0 -j %NUMBER_OF_PROCESSORS% --prefix="%~2" -q architecture=%BOOST_ARCH% address-model=%BOOST_ADDR% link=shared,static runtime-link=shared threading=multi toolset=%BOOST_TOOLSET% variant=%~4 install
 popd
 goto :EOF
 
@@ -81,11 +80,11 @@ if not exist "%BUILD_DIR%" call:extractSource %BUILD_DIR%
 set BOOST_DIR=%BUILD_DIR%\boost_%BOOST_VERSION%
 if not exist "%BOOST_DIR%\b2.exe" call:bootstrap %BOOST_DIR%
 set INSTALL_DIR=%BUILD_DIR%\install
-call:buildBoost %BOOST_DIR% %INSTALL_DIR% %~1 %~2
+if not exist "%INSTALL_DIR%" call:buildBoost %BOOST_DIR% %INSTALL_DIR% %~1 %~2
 goto :EOF
 
 :main
 if not exist "%~dp0build" md "%~dp0build"
-call:build x86 release
 call:build x64 release
+call:build x86 release
 pause
