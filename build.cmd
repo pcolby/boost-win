@@ -47,16 +47,7 @@ set SOURCE_FILE=%SOURCE_DIR%\boost_%BOOST_VERSION%.zip
 if exist "%SOURCE_DIR%\boost_%BOOST_VERSION%.7z" (
   set SOURCE_FILE=%SOURCE_DIR%\boost_%BOOST_VERSION%.7z
 )
-if not exist "%~1" (
-  @echo Extracting "%SOURCE_FILE%" to "%~1"
-  "%ZIP7%" x -o"%~1" "%SOURCE_FILE%" > nul
-  if errorlevel 1 (
-    echo Failed to extract "%SOURCE_FILE%"
-	pause
-	rmdir "%~1"
-	exit errorlevel
-  )
-)
+if not exist "%~1" call:extract %SOURCE_FILE% %~1
 goto :EOF
 
 :: usage: call:bootstrap boost_dir
