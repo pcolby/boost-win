@@ -6,8 +6,11 @@
 
 set BOOST_TOOLSET=msvc-10.0
 set BOOST_VERSION=1_53_0
+set BZIP_VERSION=1.0.6
 set WIN_SDK_VERSION=7.1
 set ZIP7=%PROGRAMFILES%\7-zip\7z.exe
+set ZLIB_FILE_VERSION=127
+set ZLIB_VERSION=1.2.7
 
 :: I like to copy %WIN_SDK%\Bin\SetEnv.cmd to %WIN_SDK%\Bin\SetEnvNc.cmd to
 :: remove the two "COLOR 0x" calls and the CLS call - just for nicer output.
@@ -15,6 +18,19 @@ set WIN_SDK=%PROGRAMFILES%\Microsoft SDKs\Windows\v%WIN_SDK_VERSION%
 set SET_ENV=%WIN_SDK%\Bin\SetEnvNc.cmd
 if not exist "%SET_ENV%" set SET_ENV=%WIN_SDK%\Bin\SetEnv.cmd
 goto main
+
+:: usage: call:extract input-file output-dir
+:extract
+::if not exist "%~2" (
+  @echo Extracting "%~1" to "%~2"
+  "%ZIP7%" x -o"%~2" "%~1" > nul
+  if errorlevel 1 (
+    echo Failed to extract "%~1"
+    pause
+    exit errorlevel
+  )
+::)
+goto :EOF
 
 :: usage: call:configureWinSDK x86|x64|ia64 debug|release [/vista^|/xp^|/2003^|/2008^|/win7]
 :configureWinSDK
@@ -84,6 +100,13 @@ if not exist "%INSTALL_DIR%" call:buildBoost %BOOST_DIR% %INSTALL_DIR% %~1 %~2
 goto :EOF
 
 :main
+if "%BZIP_VERSION%" NEQ "" (
+  if not exist "%~dp0source\bzip2-%BZIP_VERSION%.tar" call:extract %~dp0source\bzip2-%BZIP_VERSION%.tar.gz %~dp0source
+  if not exist "%~dp0source\bzip2-%BZIP_VERSION%" call:extract %~dp0source\bzip2-%BZIP_VERSION%.tar %~dp0source
+)
+if "%ZLIB_FILE_VERSION%" NEQ "" (
+  if not exist "%~dp0source\zlib-%ZLIB_VERSION%" call:extract %~dp0source\zlib%ZLIB_FILE_VERSION%.zip %~dp0source
+)
 if not exist "%~dp0build" md "%~dp0build"
 call:build x64 release
 call:build x86 release
