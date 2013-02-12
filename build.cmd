@@ -3,6 +3,8 @@
 ::  * Microsoft Visual Studio / C++
 ::  * Microsoft WinSDK
 ::  * Microsoft HPC Pack 2008 R2 MS-MPI Redistributed Package (optional)
+::  * (Optional) bzip2 library http://www.bzip.org/
+::  * (Optional) zlib library http://www.zlib.net/
 
 set BOOST_TOOLSET=msvc-10.0
 set BOOST_VERSION=1_53_0
