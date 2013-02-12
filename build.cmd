@@ -21,15 +21,13 @@ goto main
 
 :: usage: call:extract input-file output-dir
 :extract
-::if not exist "%~2" (
-  @echo Extracting "%~1" to "%~2"
-  "%ZIP7%" x -o"%~2" "%~1" > nul
-  if errorlevel 1 (
-    echo Failed to extract "%~1"
-    pause
-    exit errorlevel
-  )
-::)
+@echo Extracting "%~1" to "%~2"
+"%ZIP7%" x -o"%~2" "%~1" > nul
+if errorlevel 1 (
+  echo Failed to extract "%~1"
+  pause
+  exit errorlevel
+)
 goto :EOF
 
 :: usage: call:configureWinSDK x86|x64|ia64 debug|release [/vista^|/xp^|/2003^|/2008^|/win7]
