@@ -1,5 +1,5 @@
 @echo off
-:: Dependancies:
+:: Dependencies:
 ::  * Microsoft Visual Studio / C++
 ::  * Microsoft WinSDK
 ::  * Microsoft HPC Pack 2008 R2 MS-MPI Redistributed Package (optional)
