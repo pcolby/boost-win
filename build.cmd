@@ -6,11 +6,14 @@
 ::  * (Optional) bzip2 library http://www.bzip.org/
 ::  * (Optional) zlib library http://www.zlib.net/
 
+:: The following are all required; adjust to match your setup.
 set BOOST_TOOLSET=msvc-10.0
 set BOOST_VERSION=1_53_0
-set BZIP_VERSION=1.0.6
 set WIN_SDK_VERSION=7.1
 set ZIP7=%PROGRAMFILES%\7-zip\7z.exe
+
+:: The following are all optional; comment out if not needed.
+set BZIP_VERSION=1.0.6
 set ZLIB_FILE_VERSION=127
 set ZLIB_VERSION=1.2.7
 
