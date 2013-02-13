@@ -73,8 +73,10 @@ goto :EOF
 :buildBoost
 if /I "%~3" EQU "ia64" ( set BOOST_ARCH=ia64 ) else set BOOST_ARCH=x86
 if /I "%~3" EQU "x86" ( set BOOST_ADDR=32 ) else set BOOST_ADDR=64
+if "%BZIP_VERSION%" NEQ "" set sBZIP2=-sBZIP2_SOURCE="%~dp0source\bzip2-%BZIP_VERSION%"
+if "%ZLIB_FILE_VERSION%" NEQ "" set sZLIB=-sZLIB_SOURCE="%~dp0source\zlib-%ZLIB_VERSION%"
 pushd "%~1"
-b2.exe -d0 -j %NUMBER_OF_PROCESSORS% --prefix="%~2" -q architecture=%BOOST_ARCH% address-model=%BOOST_ADDR% link=shared,static runtime-link=shared threading=multi toolset=%BOOST_TOOLSET% variant=%~4 install
+b2.exe -d0 -j %NUMBER_OF_PROCESSORS% --prefix="%~2" -q %sBZIP2% %sZLIB% architecture=%BOOST_ARCH% address-model=%BOOST_ADDR% link=shared,static runtime-link=shared threading=multi toolset=%BOOST_TOOLSET% variant=%~4 install
 popd
 goto :EOF
 
