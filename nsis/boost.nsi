@@ -22,7 +22,7 @@ XPStyle on
 
 # Modern UI2 Install Pages.
 !insertmacro MUI_PAGE_WELCOME
-;!insertmacro MUI_PAGE_LICENSE "Eula.rtf"
+!insertmacro MUI_PAGE_LICENSE "..\build\boost_1_53_0-x64\boost_1_53_0\LICENSE_1_0.txt"
 ;!define MUI_PAGE_CUSTOMFUNCTION_PRE onComponentsPre
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
