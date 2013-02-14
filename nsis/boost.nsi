@@ -4,7 +4,7 @@
 
 # Installer Attributes: General Attributes.
 InstallDir "$PROGRAMFILES\Boost\1.53" ; Default only; see .onInit below.
-InstallDirRegKey HKLM "Software\Boost\1.53.0" "installDir"
+InstallDirRegKey HKLM "Software\Boost\1.53" "installDir"
 Name "Boost 1.53"
 OutFile Boost-1.53.0-0.exe
 XPStyle on
@@ -68,7 +68,7 @@ Function un.onInit
 	# Check if this 32-bit uninstaller is running under WOW64.
 	Call un.detectWow64
 	IntCmpU $isWow64 0 0 +2 +2
-		ReadRegStr $INSTDIR HKLM "Software\Boost\ver" "installDir" ; Re-apply the InstallDirRegKey value, since we've now switched to the 64-bit registry view.
+		ReadRegStr $INSTDIR HKLM "Software\Boost\1.53" "installDir" ; Re-apply the InstallDirRegKey value, since we've now switched to the 64-bit registry view.
 FunctionEnd
 
 # Functions to be used by install / uninstall sections.
@@ -112,9 +112,9 @@ Section "-Common" ; Hidden section.
 	# Write the necessary registry key values.
 	Push $0
 	GetCurInstType $0
-	WriteRegDWORD HKLM "Software\Boost\ver\" "installType" $0
+	WriteRegDWORD HKLM "Software\Boost\1.53" "installType" $0
 	Pop $0
-	WriteRegStr HKLM "Software\Boost\ver\" "installDir" $INSTDIR
+	WriteRegStr HKLM "Software\Boost\1.53" "installDir" $INSTDIR
 	
 	# Write the uninstaller.
 	SetOutPath $INSTDIR
@@ -176,9 +176,9 @@ SectionGroupEnd
 # Sections to uninstall.
 
 Section "un.Registry Settings"
-  DeleteRegValue HKLM "Software\Boost\ver" "installType"
-  DeleteRegValue HKLM "Software\Boost\ver" "installDir"
-  DeleteRegKey /ifempty HKLM "Software\Boost\ver"
+  DeleteRegValue HKLM "Software\Boost\1.53" "installType"
+  DeleteRegValue HKLM "Software\Boost\1.53" "installDir"
+  DeleteRegKey /ifempty HKLM "Software\Boost\1.53"
   DeleteRegKey /ifempty HKLM "Software\Boost"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Boost 1.53"
 SectionEnd
@@ -192,11 +192,11 @@ SectionEnd
 
 # Installer Attributes: Version Information.
 VIProductVersion "1.53.0.0"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Boost"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Boost C++ Libraries"
 ;VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" ""
-VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "Boost"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (c) 2013 Paul Colby. Distributed under the Boost Software License, Version 1.0."
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Boost installer"
+;VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" ""
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (c) 2013 Paul Colby."
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Boost 1.53 Installer"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "1.53.0.0"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "1.53.0.0"
 ;VIAddVersionKey /LANG=${LANG_ENGLISH} "InternalName" ""
