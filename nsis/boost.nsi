@@ -125,36 +125,36 @@ Section "Source Headers"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
   SectionIn 3 ; Static libraries
-  SetOutPath $INSTDIR
-  File /r ..\build/boost_1_53_0-x64\install\include\a*
+  SetOutPath $INSTDIR\include
+  File /r ..\build/boost_1_53_0-x64\install\include\boost-1_53\boost\*
 SectionEnd
 
 SectionGroup "Dynamic Libraries"
 Section "32-bit Dynamic Library Stubs"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
-  SetOutPath $INSTDIR
-  File /r ..\build/boost_1_53_0-x86\install\boost_a*.lib
+  SetOutPath $INSTDIR\lib
+  File ..\build/boost_1_53_0-x86\install\lib\boost*.lib
 SectionEnd
 Section "32-bit Runtime DLLs"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
   SectionIn 4 ; Runtime DLLs.
-  SetOutPath $INSTDIR
-  File /r ..\build/boost_1_53_0-x86\install\boost_a*.dll
+  SetOutPath $INSTDIR\lib
+  File ..\build/boost_1_53_0-x86\install\lib\*.dll
 SectionEnd
 Section "64-bit Dynamic Library Stubs"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
-  SetOutPath $INSTDIR
-  File /r ..\build/boost_1_53_0-x64\install\boost_a*.lib
+  SetOutPath $INSTDIR\lib
+  File ..\build/boost_1_53_0-x64\install\lib\boost*.lib
 SectionEnd
 Section "64-bit Runtime DLLs" DLLS_64BIT
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
   SectionIn 4 ; Runtime DLLs.
-  SetOutPath $INSTDIR
-  File /r ..\build/boost_1_53_0-x64\install\boost_a*.dll
+  SetOutPath $INSTDIR\lib
+  File ..\build/boost_1_53_0-x64\install\lib\*.dll
 SectionEnd
 SectionGroupEnd
 
@@ -162,14 +162,14 @@ SectionGroup "Static Libraries"
 Section "32-bit Static Libraries"
   SectionIn 1 ; Complete.
   SectionIn 3 ; Static libraries.
-  SetOutPath $INSTDIR
-  File /r ..\build/boost_1_53_0-x86\install\libboost_a*.lib
+  SetOutPath $INSTDIR\lib
+  File ..\build/boost_1_53_0-x86\install\lib\libboost*.lib
 SectionEnd
 Section "64-bit Static Libraries"
   SectionIn 1 ; Complete.
   SectionIn 3 ; Static libraries.
-  SetOutPath $INSTDIR
-  File /r ..\build/boost_1_53_0-x64\install\libboost_a*.lib
+  SetOutPath $INSTDIR\lib
+  File ..\build/boost_1_53_0-x64\install\lib\libboost*.lib
 SectionEnd
 SectionGroupEnd
 
