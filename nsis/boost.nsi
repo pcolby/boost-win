@@ -133,27 +133,27 @@ SectionGroup "Dynamic Libraries"
 Section "32-bit Dynamic Library Stubs"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
-  SetOutPath $INSTDIR\lib
+  SetOutPath $INSTDIR\lib32
   File ..\build/boost_1_53_0-x86\install\lib\boost*.lib
 SectionEnd
 Section "32-bit Runtime DLLs"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
   SectionIn 4 ; Runtime DLLs.
-  SetOutPath $INSTDIR\lib
+  SetOutPath $INSTDIR\lib32
   File ..\build/boost_1_53_0-x86\install\lib\*.dll
 SectionEnd
 Section "64-bit Dynamic Library Stubs"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
-  SetOutPath $INSTDIR\lib
+  SetOutPath $INSTDIR\lib64
   File ..\build/boost_1_53_0-x64\install\lib\boost*.lib
 SectionEnd
-Section "64-bit Runtime DLLs" DLLS_64BIT
+Section "64-bit Runtime DLLs"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
   SectionIn 4 ; Runtime DLLs.
-  SetOutPath $INSTDIR\lib
+  SetOutPath $INSTDIR\lib64
   File ..\build/boost_1_53_0-x64\install\lib\*.dll
 SectionEnd
 SectionGroupEnd
@@ -162,13 +162,13 @@ SectionGroup "Static Libraries"
 Section "32-bit Static Libraries"
   SectionIn 1 ; Complete.
   SectionIn 3 ; Static libraries.
-  SetOutPath $INSTDIR\lib
+  SetOutPath $INSTDIR\lib32
   File ..\build/boost_1_53_0-x86\install\lib\libboost*.lib
 SectionEnd
 Section "64-bit Static Libraries"
   SectionIn 1 ; Complete.
   SectionIn 3 ; Static libraries.
-  SetOutPath $INSTDIR\lib
+  SetOutPath $INSTDIR\lib64
   File ..\build/boost_1_53_0-x64\install\lib\libboost*.lib
 SectionEnd
 SectionGroupEnd
@@ -184,8 +184,9 @@ Section "un.Registry Settings"
 SectionEnd
 
 Section "un.Application Files"
-	Delete "$INSTDIR\Error.log"
-	Delete "$INSTDIR\Install.log"
+	RMDir /r "$INSTDIR\include"
+	RMDir /r "$INSTDIR\lib32"
+	RMDir /r "$INSTDIR\lib64"
 	Delete "$INSTDIR\Uninstall.exe"
 	RMDir "$INSTDIR"
 SectionEnd
