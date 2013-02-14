@@ -16,7 +16,7 @@ XPStyle on
 ;!define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\win.bmp"
 ;!define MUI_UNWELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\win.bmp"
 !define MUI_ABORTWARNING
-;!define MUI_ICON "..\Assets\Application Icon\SafeGuard.ico"
+!define MUI_ICON "boost.ico"
 ;!define MUI_UNICON "..."
 !define MUI_COMPONENTSPAGE_NODESC
 
