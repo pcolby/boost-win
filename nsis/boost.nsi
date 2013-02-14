@@ -3,9 +3,9 @@
 !include "WinVer.nsh" ; LogicLib extensions for handling Windows versions and service packs.
 
 # Installer Attributes: General Attributes.
-InstallDir "$PROGRAMFILES\Boost\1.53.0"
+InstallDir "$PROGRAMFILES\Boost\1.53" ; Default only; see .onInit below.
 InstallDirRegKey HKLM "Software\Boost\1.53.0" "installDir"
-Name "Boost 1.53.0"
+Name "Boost 1.53"
 OutFile Boost-1.53.0-0.exe
 XPStyle on
 
@@ -24,10 +24,8 @@ XPStyle on
 # Modern UI2 Install Pages.
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "..\build\boost_1_53_0-x64\boost_1_53_0\LICENSE_1_0.txt"
-;!define MUI_PAGE_CUSTOMFUNCTION_PRE onComponentsPre
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
-;Page custom messageFoldersPage onMessageFoldersPageLeave
 !insertmacro MUI_PAGE_INSTFILES
 
 # Modern UI2 Uninstall Pages.
@@ -45,20 +43,24 @@ InstType "Dynamic libraries"
 InstType "Static libraries"
 InstType "Runtime DLLs only"
 
-Var /GLOBAL rc
-
 # Callback functions.
 
 Function .onInit
 	# Check if this 32-bit installer is running under WOW64.
 	Var /GLOBAL isWow64
 	Call detectWow64
-	
-	# If this is, indeed, WOW64, then switch the 64-bit registry view.
-	${If} $isWow64 != 0
-	    ;Call hide64BitLibs
+
+	# Set the initial installation directory (the user can still override if they wish).
+	Push $0
+	ReadRegStr $0 HKLM "Software\Boost\1.53" "installDir"
+	${IfNot} $0 == ""
+		StrCpy $INSTDIR $0
+	${ElseIf} $isWow64 != 0
+		StrCpy $INSTDIR "$PROGRAMFILES64\Boost\1.53"
+	;Else, leave $INSTDIR unchanged, ie default to the InstallDir value defined above.
 	${EndIf}
-	
+	Pop $0
+
     SetCurInstType 1 ; Dynamic libraries.
 FunctionEnd
 
@@ -71,6 +73,7 @@ FunctionEnd
 
 # Functions to be used by install / uninstall sections.
 
+Var /GLOBAL rc
 !macro detectWow64 un
 Function ${un}detectWow64 ; Will set $isWow64 to non-zero if under WOW64, zero otherwise.
 	# Find out if this 32-bit uninstaller is running under WOW64, if so (and only if so) this *must* be 64-bit Windows.
