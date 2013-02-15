@@ -87,7 +87,7 @@ goto :EOF
 :build
 @echo ==== Building %~1 %~2 ====
 call:configureWinSDK %~1 %~2
-set BUILD_DIR=%~dp0build\boost_%BOOST_VERSION%-%~1
+set BUILD_DIR=%~dp0build\boost_%BOOST_VERSION%-%~1-%~2
 if not exist "%BUILD_DIR%" call:extractSource %BUILD_DIR%
 set BOOST_DIR=%BUILD_DIR%\boost_%BOOST_VERSION%
 if not exist "%BOOST_DIR%\b2.exe" call:bootstrap %BOOST_DIR%
@@ -104,6 +104,8 @@ if "%ZLIB_FILE_VERSION%" NEQ "" (
   if not exist "%~dp0source\zlib-%ZLIB_VERSION%" call:extract %~dp0source\zlib%ZLIB_FILE_VERSION%.zip %~dp0source
 )
 if not exist "%~dp0build" md "%~dp0build"
+call:build x64 debug
 call:build x64 release
+call:build x86 debug
 call:build x86 release
 pause
