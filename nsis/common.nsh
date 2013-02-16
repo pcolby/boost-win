@@ -10,14 +10,15 @@
 
 !define BOOST_BUILD_DIR32 "..\build\boost_${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_BUILD}-x86-${VARIANT}\install"
 !define BOOST_BUILD_DIR64 "..\build\boost_${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_BUILD}-x64-${VARIANT}\install"
+!define OUTPUT_FILENAME   "Boost-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}-${COMPILER}-${VARIANT}-${VERSION_REVISION}.exe"
 !define REGISTRY_KEY      "Software\Boost\${VERSION_MAJOR}.${VERSION_MINOR}-${COMPILER}-${VARIANT}"
-;!define TEST_PREFIX       "b" ; // Only headers / libs starting with this prefix will be packaged - just for dev speed.
+!define TEST_PREFIX       "" ; // Only headers / libs starting with this prefix will be packaged - just for dev speed.
 
 # Installer Attributes: General Attributes.
 InstallDir "$PROGRAMFILES\Boost\${VERSION_MAJOR}.${VERSION_MINOR}" ; Default only; see .onInit below.
 InstallDirRegKey HKLM "Software\Boost\${VERSION_MAJOR}.${VERSION_MINOR}-${COMPILER}-${VARIANT}" "installDir"
 Name "Boost ${VERSION_MAJOR}.${VERSION_MINOR}"
-OutFile Boost-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}-${COMPILER}-${VARIANT}-${VERSION_REVISION}.exe
+OutFile "${OUTPUT_FILENAME}"
 SetCompressor lzma
 XPStyle on
 
@@ -226,6 +227,6 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION_MAJOR}.${VERSION_
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}.${VERSION_REVISION}"
 ;VIAddVersionKey /LANG=${LANG_ENGLISH} "InternalName" ""
 ;VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalTrademarks" ""
-VIAddVersionKey /LANG=${LANG_ENGLISH} "OriginalFilename" "${OutFile}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "OriginalFilename" "${OUTPUT_FILENAME}"
 ;VIAddVersionKey /LANG=${LANG_ENGLISH} "PrivateBuild" ""
 ;VIAddVersionKey /LANG=${LANG_ENGLISH} "SpecialBuild" ""
