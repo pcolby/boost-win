@@ -61,7 +61,7 @@ Function .onInit
 
 	# Set the initial installation directory (the user can still override if they wish).
 	Push $0
-	ReadRegStr $0 HKLM "${REGISTRY_KEY}"
+	ReadRegStr $0 HKLM "${REGISTRY_KEY}" "installDir"
 	${IfNot} $0 == ""
 		StrCpy $INSTDIR $0
 	${ElseIf} $isWow64 != 0
