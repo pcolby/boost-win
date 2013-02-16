@@ -130,7 +130,7 @@ Section "Source Headers"
 SectionEnd
 
 SectionGroup "Dynamic Libraries"
-Section "32-bit Dynamic Library Stubs"
+Section "32-bit Dynamic Import Libraries"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
   SetOutPath $INSTDIR\lib32
@@ -143,7 +143,7 @@ Section "32-bit Runtime DLLs"
   SetOutPath $INSTDIR\lib32
   File ..\build/boost_1_53_0-x86\install\lib\*.dll
 SectionEnd
-Section "64-bit Dynamic Library Stubs"
+Section "64-bit Dynamic Import Libraries"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
   SetOutPath $INSTDIR\lib64
