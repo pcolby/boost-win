@@ -1,4 +1,4 @@
-!define COMPILER "vc10"
+!define COMPILER "vc100"
 !define VARIANT "release"
 
 !include "common.nsh"

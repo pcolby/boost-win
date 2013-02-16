@@ -8,19 +8,19 @@
 !define VERSION_BUILD    "0"  ; Boost maintencance version.
 !define VERSION_REVISION "0"  ; Installer release version.
 
-!define BOOST_BUILD_DIR32 "..\build\boost_${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_BUILD}-x32-${VARIANT}\install"
+!define BOOST_BUILD_DIR32 "..\build\boost_${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_BUILD}-x86-${VARIANT}\install"
 !define BOOST_BUILD_DIR64 "..\build\boost_${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_BUILD}-x64-${VARIANT}\install"
+!define REGISTRY_KEY      "Software\Boost\${VERSION_MAJOR}.${VERSION_MINOR}-${COMPILER}-${VARIANT}"
 
 # Installer Attributes: General Attributes.
 InstallDir "$PROGRAMFILES\Boost\${VERSION_MAJOR}.${VERSION_MINOR}" ; Default only; see .onInit below.
 InstallDirRegKey HKLM "Software\Boost\${VERSION_MAJOR}.${VERSION_MINOR}-${COMPILER}-${VARIANT}" "installDir"
-Name "Boost ${VERSION_MAJOR}.${VERSION_MINOR} (${COMPILER} ${VARIANT})"
+Name "Boost ${VERSION_MAJOR}.${VERSION_MINOR}"
 OutFile Boost-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}-${COMPILER}-${VARIANT}-${VERSION_REVISION}.exe
 XPStyle on
 
 # Modern UI2 Interface Configuration.
 !define MUI_HEADERIMAGE
-;!define MUI_HEADERIMAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
 !define MUI_HEADERIMAGE_BITMAP "header.bmp"
 !define MUI_HEADERIMAGE_UNBITMAP "header.bmp"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "welcome.bmp"
@@ -32,7 +32,7 @@ XPStyle on
 
 # Modern UI2 Install Pages.
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "..\build\boost_1_53_0-x64-release\boost_1_53_0\LICENSE_1_0.txt"
+!insertmacro MUI_PAGE_LICENSE "..\build\boost_${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_BUILD}-x64-${VARIANT}\boost_${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_BUILD}\LICENSE_1_0.txt"
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
@@ -61,11 +61,11 @@ Function .onInit
 
 	# Set the initial installation directory (the user can still override if they wish).
 	Push $0
-	ReadRegStr $0 HKLM "Software\Boost\1.53" "installDir"
+	ReadRegStr $0 HKLM "${REGISTRY_KEY}"
 	${IfNot} $0 == ""
 		StrCpy $INSTDIR $0
 	${ElseIf} $isWow64 != 0
-		StrCpy $INSTDIR "$PROGRAMFILES64\Boost\1.53"
+		StrCpy $INSTDIR "$PROGRAMFILES64\Boost\${VERSION_MAJOR}.${VERSION_MINOR}"
 	;Else, leave $INSTDIR unchanged, ie default to the InstallDir value defined above.
 	${EndIf}
 	Pop $0
@@ -77,7 +77,7 @@ Function un.onInit
 	# Check if this 32-bit uninstaller is running under WOW64.
 	Call un.detectWow64
 	IntCmpU $isWow64 0 0 +2 +2
-		ReadRegStr $INSTDIR HKLM "Software\Boost\1.53" "installDir" ; Re-apply the InstallDirRegKey value, since we've now switched to the 64-bit registry view.
+		ReadRegStr $INSTDIR HKLM "${REGISTRY_KEY}" "installDir" ; Re-apply the InstallDirRegKey value, since we've now switched to the 64-bit registry view.
 FunctionEnd
 
 # Functions to be used by install / uninstall sections.
@@ -121,9 +121,9 @@ Section "-Common" ; Hidden section.
 	# Write the necessary registry key values.
 	Push $0
 	GetCurInstType $0
-	WriteRegDWORD HKLM "Software\Boost\1.53" "installType" $0
+	WriteRegDWORD HKLM "${REGISTRY_KEY}" "installType" $0
 	Pop $0
-	WriteRegStr HKLM "Software\Boost\1.53" "installDir" $INSTDIR
+	WriteRegStr HKLM "${REGISTRY_KEY}" "installDir" $INSTDIR
 	
 	# Write the uninstaller.
 	SetOutPath $INSTDIR
@@ -185,11 +185,11 @@ SectionGroupEnd
 # Sections to uninstall.
 
 Section "un.Registry Settings"
-  DeleteRegValue HKLM "Software\Boost\1.53" "installType"
-  DeleteRegValue HKLM "Software\Boost\1.53" "installDir"
-  DeleteRegKey /ifempty HKLM "Software\Boost\1.53"
+  DeleteRegValue HKLM "${REGISTRY_KEY}" "installType"
+  DeleteRegValue HKLM "${REGISTRY_KEY}" "installDir"
+  DeleteRegKey /ifempty HKLM "${REGISTRY_KEY}"
   DeleteRegKey /ifempty HKLM "Software\Boost"
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Boost 1.53"
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Boost ${VERSION_MAJOR}.${VERSION_MINOR} ${COMPILER} ${VARIANT}"
 SectionEnd
 
 Section "un.Application Files"
@@ -201,16 +201,16 @@ Section "un.Application Files"
 SectionEnd
 
 # Installer Attributes: Version Information.
-VIProductVersion "1.53.0.0"
+VIProductVersion "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}.${VERSION_REVISION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Boost C++ Libraries"
-;VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" ""
+VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "http://colby.id.au/boost-for-windows"
 ;VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" ""
 VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (c) 2013 Paul Colby."
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Boost 1.53 Installer"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "1.53.0.0"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "1.53.0.0"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Boost ${VERSION_MAJOR}.${VERSION_MINOR} Installer"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}.${VERSION_REVISION}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}.${VERSION_REVISION}"
 ;VIAddVersionKey /LANG=${LANG_ENGLISH} "InternalName" ""
 ;VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalTrademarks" ""
-;VIAddVersionKey /LANG=${LANG_ENGLISH} "OriginalFilename" ""
+VIAddVersionKey /LANG=${LANG_ENGLISH} "OriginalFilename" "${OutFile}"
 ;VIAddVersionKey /LANG=${LANG_ENGLISH} "PrivateBuild" ""
 ;VIAddVersionKey /LANG=${LANG_ENGLISH} "SpecialBuild" ""
