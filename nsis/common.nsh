@@ -119,11 +119,11 @@ Section "-Common" ; Hidden section.
 	${EndIf}
     
 	# Write the necessary registry key values.
+	WriteRegStr HKLM "${REGISTRY_KEY}" "installDir" $INSTDIR
 	Push $0
 	GetCurInstType $0
 	WriteRegDWORD HKLM "${REGISTRY_KEY}" "installType" $0
 	Pop $0
-	WriteRegStr HKLM "${REGISTRY_KEY}" "installDir" $INSTDIR
 	
 	# Write the uninstaller.
 	SetOutPath $INSTDIR
@@ -185,8 +185,8 @@ SectionGroupEnd
 # Sections to uninstall.
 
 Section "un.Registry Settings"
-  DeleteRegValue HKLM "${REGISTRY_KEY}" "installType"
   DeleteRegValue HKLM "${REGISTRY_KEY}" "installDir"
+  DeleteRegValue HKLM "${REGISTRY_KEY}" "installType"
   DeleteRegKey /ifempty HKLM "${REGISTRY_KEY}"
   DeleteRegKey /ifempty HKLM "Software\Boost"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Boost ${VERSION_MAJOR}.${VERSION_MINOR} ${COMPILER} ${VARIANT}"
