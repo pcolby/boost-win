@@ -11,12 +11,14 @@
 !define BOOST_BUILD_DIR32 "..\build\boost_${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_BUILD}-x86-${VARIANT}\install"
 !define BOOST_BUILD_DIR64 "..\build\boost_${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_BUILD}-x64-${VARIANT}\install"
 !define REGISTRY_KEY      "Software\Boost\${VERSION_MAJOR}.${VERSION_MINOR}-${COMPILER}-${VARIANT}"
+;!define TEST_PREFIX       "b" ; // Only headers / libs starting with this prefix will be packaged - just for dev speed.
 
 # Installer Attributes: General Attributes.
 InstallDir "$PROGRAMFILES\Boost\${VERSION_MAJOR}.${VERSION_MINOR}" ; Default only; see .onInit below.
 InstallDirRegKey HKLM "Software\Boost\${VERSION_MAJOR}.${VERSION_MINOR}-${COMPILER}-${VARIANT}" "installDir"
 Name "Boost ${VERSION_MAJOR}.${VERSION_MINOR}"
 OutFile Boost-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}-${COMPILER}-${VARIANT}-${VERSION_REVISION}.exe
+SetCompressor lzma
 XPStyle on
 
 # Modern UI2 Interface Configuration.
@@ -135,50 +137,63 @@ Section "Source Headers"
   SectionIn 2 ; Dynamic libraries.
   SectionIn 3 ; Static libraries
   SetOutPath $INSTDIR\include
-  File /r "${BOOST_BUILD_DIR64}\include\boost-${VERSION_MAJOR}_${VERSION_MINOR}\boost\*"
+  File /r "${BOOST_BUILD_DIR64}\include\boost-${VERSION_MAJOR}_${VERSION_MINOR}\boost\${TEST_PREFIX}*"
 SectionEnd
 
-SectionGroup "Dynamic Libraries"
+SectionGroup "Mulit-threaded Dynamic Libraries"
 Section "32-bit Dynamic Import Libraries"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
   SetOutPath $INSTDIR\lib32
-  File "${BOOST_BUILD_DIR32}\lib\boost*.lib"
+  File "${BOOST_BUILD_DIR32}\lib\boost_${TEST_PREFIX}*-mt-*.lib"
 SectionEnd
 Section "32-bit Runtime DLLs"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
   SectionIn 4 ; Runtime DLLs.
   SetOutPath $INSTDIR\lib32
-  File "${BOOST_BUILD_DIR32}\lib\*.dll"
+  File "${BOOST_BUILD_DIR32}\lib\boost_${TEST_PREFIX}*.dll"
 SectionEnd
 Section "64-bit Dynamic Import Libraries"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
   SetOutPath $INSTDIR\lib64
-  File "${BOOST_BUILD_DIR64}\lib\boost*.lib"
+  File "${BOOST_BUILD_DIR64}\lib\boost_${TEST_PREFIX}*-mt-*.lib"
 SectionEnd
 Section "64-bit Runtime DLLs"
   SectionIn 1 ; Complete.
   SectionIn 2 ; Dynamic libraries.
   SectionIn 4 ; Runtime DLLs.
   SetOutPath $INSTDIR\lib64
-  File "${BOOST_BUILD_DIR64}\lib\*.dll"
+  File "${BOOST_BUILD_DIR64}\lib\boost_${TEST_PREFIX}*.dll"
 SectionEnd
 SectionGroupEnd
 
-SectionGroup "Static Libraries"
+SectionGroup "Mulit-threaded Static Libraries"
 Section "32-bit Static Libraries"
   SectionIn 1 ; Complete.
   SectionIn 3 ; Static libraries.
   SetOutPath $INSTDIR\lib32
-  File "${BOOST_BUILD_DIR32}\lib\libboost*.lib"
+  File "${BOOST_BUILD_DIR32}\lib\libboost_${TEST_PREFIX}*-mt-*.lib"
 SectionEnd
 Section "64-bit Static Libraries"
   SectionIn 1 ; Complete.
   SectionIn 3 ; Static libraries.
   SetOutPath $INSTDIR\lib64
-  File "${BOOST_BUILD_DIR64}\lib\libboost*.lib"
+  File "${BOOST_BUILD_DIR64}\lib\libboost_${TEST_PREFIX}*-mt-*.lib"
+SectionEnd
+SectionGroupEnd
+
+SectionGroup "Single Threaded Static Libraries"
+Section "32-bit Single Threaded Static Libraries"
+  SectionIn 1 ; Complete.
+  SetOutPath $INSTDIR\lib32
+  File /x *-mt-* "${BOOST_BUILD_DIR32}\lib\libboost_${TEST_PREFIX}*.lib"
+SectionEnd
+Section "64-bit Single Threaded Static Libraries"
+  SectionIn 1 ; Complete.
+  SetOutPath $INSTDIR\lib64
+  File /x *-mt-* "${BOOST_BUILD_DIR64}\lib\libboost_${TEST_PREFIX}*.lib" 
 SectionEnd
 SectionGroupEnd
 
