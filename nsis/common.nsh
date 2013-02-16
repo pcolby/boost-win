@@ -209,9 +209,14 @@ Section "un.Registry Settings"
 SectionEnd
 
 Section "un.Application Files"
-	RMDir /r "$INSTDIR\include"
-	RMDir /r "$INSTDIR\lib32"
-	RMDir /r "$INSTDIR\lib64"
+    ; Note, the following will delete both debug and release versions :(
+    Delete "$INSTDIR\lib32\*-${COMPILER}-*"
+    Delete "$INSTDIR\lib64\*-${COMPILER}-*"
+	RMDir "$INSTDIR\lib32" ; Will only succeed if no other ${COMPILER} versions
+	RMDir "$INSTDIR\lib64" ; have been installed also (desired behaviour).
+	${IfNot} ${FileExists} "$INSTDIR\lib*"
+	    RMDir /r "$INSTDIR\include"
+    ${EndIf}
 	Delete "$INSTDIR\Uninstall.exe"
 	RMDir "$INSTDIR"
 SectionEnd
