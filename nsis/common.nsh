@@ -199,6 +199,19 @@ Section "64-bit Single Threaded Static Libraries"
 SectionEnd
 SectionGroupEnd
 
+Section "-Control Panel info" ; Programs and Features (aka Add/Remove Programs) information.
+    !define UNINSTALL_REGISTRY_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Boost ${VERSION_MAJOR}.${VERSION_MINOR} ${COMPILER} ${VARIANT}"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "DisplayName" "Boost ${VERSION_MAJOR}.${VERSION_MINOR}"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "DisplayIcon" "$\"$INSTDIR\${UNINSTALLER}$\",0"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "DisplayVersion" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}-${COMPILER}-${VARIANT}-${VERSION_REVISION}"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "Publisher" "Paul Colby"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "URLInfoAbout" "http://colby.id.au/boost-for-windows"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "UninstallString" "$\"$INSTDIR\${UNINSTALLER}$\""
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "QuietUninstallString" "$\"$INSTDIR\${UNINSTALLER}$\" /S"
+    WriteRegDword HKLM "${UNINSTALL_REGISTRY_KEY}" "NoModify" 1
+    WriteRegDword HKLM "${UNINSTALL_REGISTRY_KEY}" "NoRepair" 1
+SectionEnd
+
 # Sections to uninstall.
 
 Section "un.Registry Settings"
