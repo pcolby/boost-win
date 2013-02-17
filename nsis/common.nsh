@@ -199,18 +199,39 @@ Section "64-bit Single Threaded Static Libraries"
 SectionEnd
 SectionGroupEnd
 
-Section "-Control Panel info" ; Programs and Features (aka Add/Remove Programs) information.
+Var installedSize
+Section "-Control Panel info" LAST_SECTION ; Programs and Features (aka Add/Remove Programs) information.
     !define UNINSTALL_REGISTRY_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Boost ${VERSION_MAJOR}.${VERSION_MINOR} ${COMPILER} ${VARIANT}"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "Comments" "${COMPILER}-${VARIANT}"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "Contact" "Paul Colby"
     WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "DisplayName" "Boost ${VERSION_MAJOR}.${VERSION_MINOR}"
     WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "DisplayIcon" "$\"$INSTDIR\${UNINSTALLER}$\",0"
-    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "DisplayVersion" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}-${COMPILER}-${VARIANT}-${VERSION_REVISION}"
+    WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "DisplayVersion" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}.${VERSION_REVISION}"
     WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "Publisher" "Paul Colby"
     WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "URLInfoAbout" "http://colby.id.au/boost-for-windows"
     WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "UninstallString" "$\"$INSTDIR\${UNINSTALLER}$\""
     WriteRegStr HKLM "${UNINSTALL_REGISTRY_KEY}" "QuietUninstallString" "$\"$INSTDIR\${UNINSTALLER}$\" /S"
+    Call estimateInstalledSize
+    WriteRegDword HKLM "${UNINSTALL_REGISTRY_KEY}" "EstimatedSize" $installedSize
     WriteRegDword HKLM "${UNINSTALL_REGISTRY_KEY}" "NoModify" 1
     WriteRegDword HKLM "${UNINSTALL_REGISTRY_KEY}" "NoRepair" 1
+    WriteRegDword HKLM "${UNINSTALL_REGISTRY_KEY}" "VersionMajor" ${VERSION_MAJOR}
+    WriteRegDword HKLM "${UNINSTALL_REGISTRY_KEY}" "VersionMinor" ${VERSION_MINOR}
 SectionEnd
+
+Function estimateInstalledSize
+    Push $0
+    Push $1
+    StrCpy $installedSize 0
+    ${ForEach} $1 0 ${LAST_SECTION} + 1
+        ${if} ${SectionIsSelected} $1
+            SectionGetSize $1 $0
+            IntOp $installedSize $installedSize + $0
+        ${Endif}
+    ${Next}
+    Pop $1
+    Pop $0
+FunctionEnd
 
 # Sections to uninstall.
 
