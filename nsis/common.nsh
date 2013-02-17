@@ -209,15 +209,30 @@ Section "un.Registry Settings"
 SectionEnd
 
 Section "un.Application Files"
-    ; Note, the following will delete both debug and release versions :(
-    Delete "$INSTDIR\lib32\*-${COMPILER}-*"
-    Delete "$INSTDIR\lib64\*-${COMPILER}-*"
-	RMDir "$INSTDIR\lib32" ; Will only succeed if no other ${COMPILER} versions
-	RMDir "$INSTDIR\lib64" ; have been installed also (desired behaviour).
+    # Delete the relevant library files.
+	${if} ${VARIANT} == "debug"
+	    Delete "$INSTDIR\lib32\*-${COMPILER}-*gd-${VERSION_MAJOR}_${VERSION_MINOR}.*"
+	    Delete "$INSTDIR\lib64\*-${COMPILER}-*gd-${VERSION_MAJOR}_${VERSION_MINOR}.*"
+    ${Else}
+        Delete "$INSTDIR\lib32\*-${COMPILER}-mt-${VERSION_MAJOR}_${VERSION_MINOR}.*"
+        Delete "$INSTDIR\lib64\*-${COMPILER}-mt-${VERSION_MAJOR}_${VERSION_MINOR}.*"
+        Delete "$INSTDIR\lib32\*-${COMPILER}-*s-${VERSION_MAJOR}_${VERSION_MINOR}.*"
+        Delete "$INSTDIR\lib64\*-${COMPILER}-*s-${VERSION_MAJOR}_${VERSION_MINOR}.*"
+	${EndIf}
+
+	# Delete the library directories, if empty (ie no other ${COMPILER} versions installed).
+	RMDir "$INSTDIR\lib32"
+	RMDir "$INSTDIR\lib64"
+	
+	# Removed the include directory, but only if we succeeded in removing the library directories above
 	${IfNot} ${FileExists} "$INSTDIR\lib*"
 	    RMDir /r "$INSTDIR\include"
     ${EndIf}
+	
+	# Remove the uninstaller.
 	Delete "$INSTDIR\Uninstall.exe"
+	
+	# Remove installation directory, if empty.
 	RMDir "$INSTDIR"
 SectionEnd
 
