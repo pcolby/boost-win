@@ -13,6 +13,7 @@
 !define OUTPUT_FILENAME   "Boost-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}-${COMPILER}-${VARIANT}-${VERSION_REVISION}.exe"
 !define REGISTRY_KEY      "Software\Boost\${VERSION_MAJOR}.${VERSION_MINOR}-${COMPILER}-${VARIANT}"
 !define TEST_PREFIX       "" ; // Only headers / libs starting with this prefix will be packaged - just for dev speed.
+!define UNINSTALLER       "Uninstall-${VERSION_MAJOR}.${VERSION_MINOR}-${COMPILER}-${VARIANT}-${VERSION_REVISION}.exe"
 
 # Installer Attributes: General Attributes.
 InstallDir "$PROGRAMFILES\Boost\${VERSION_MAJOR}.${VERSION_MINOR}" ; Default only; see .onInit below.
@@ -130,7 +131,7 @@ Section "-Common" ; Hidden section.
 	
 	# Write the uninstaller.
 	SetOutPath $INSTDIR
-	WriteUninstaller $INSTDIR\Uninstall.exe
+	WriteUninstaller "${UNINSTALLER}"
 SectionEnd
 
 Section "Source Headers"
@@ -230,7 +231,7 @@ Section "un.Application Files"
     ${EndIf}
 	
 	# Remove the uninstaller.
-	Delete "$INSTDIR\Uninstall.exe"
+	Delete "$INSTDIR\${UNINSTALLER}"
 	
 	# Remove installation directory, if empty.
 	RMDir "$INSTDIR"
