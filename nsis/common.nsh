@@ -31,7 +31,7 @@ XPStyle on
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "welcome.bmp"
 !define MUI_ABORTWARNING
 !define MUI_ICON "boost.ico"
-;!define MUI_UNICON "..."
+!define MUI_UNICON "boost.ico"
 !define MUI_COMPONENTSPAGE_NODESC
 
 # Modern UI2 Install Pages.
