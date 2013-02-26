@@ -2,14 +2,14 @@
 :: Dependencies:
 ::  * Microsoft Visual Studio / C++
 ::  * Microsoft WinSDK
-::  * Microsoft HPC Pack 2008 R2 MS-MPI Redistributed Package (optional)
 ::  * (Optional) bzip2 library http://www.bzip.org/
+::  * (Optional) Microsoft HPC Pack 2008 R2 MS-MPI Redistributed Package
+::  * (Optional) Python http://www.python.org/
 ::  * (Optional) zlib library http://www.zlib.net/
 
 :: The following are all required; adjust to match your setup.
-set BOOST_TOOLSET=msvc-10.0
+set BOOST_TOOLSET=msvc-11.0
 set BOOST_VERSION=1_53_0
-set WIN_SDK_VERSION=7.1
 set ZIP7=%PROGRAMFILES%\7-zip\7z.exe
 
 :: The following are all optional; comment out if not needed.
@@ -17,11 +17,15 @@ set BZIP_VERSION=1.0.6
 set ZLIB_FILE_VERSION=127
 set ZLIB_VERSION=1.2.7
 
-:: I like to copy %WIN_SDK%\Bin\SetEnv.cmd to %WIN_SDK%\Bin\SetEnvNc.cmd to
-:: remove the two "COLOR 0x" calls and the CLS call - just for nicer output.
-set WIN_SDK=%PROGRAMFILES%\Microsoft SDKs\Windows\v%WIN_SDK_VERSION%
-set SET_ENV=%WIN_SDK%\Bin\SetEnvNc.cmd
-if not exist "%SET_ENV%" set SET_ENV=%WIN_SDK%\Bin\SetEnv.cmd
+:: Only define the Windows SDK version if standalone, ie for Express versions prior to 2012.
+rem set WIN_SDK_VERSION=7.1
+if "%WIN_SDK_VERSION%" NEQ "" set WIN_SDK=%PROGRAMFILES%\Microsoft SDKs\Windows\v%WIN_SDK_VERSION%
+if "%WIN_SDK%" NEQ "" (
+  if exist "%WIN_SDK%\Bin\SetEnv.cmd" set SET_ENV=%WIN_SDK%\Bin\SetEnv.cmd
+  rem I like to copy %WIN_SDK%\Bin\SetEnv.cmd to %WIN_SDK%\Bin\SetEnvNc.cmd to
+  rem remove the two "COLOR 0x" calls and the CLS call - just for nicer output.
+  if exist "%WIN_SDK%\Bin\SetEnvNc.cmd" set SET_ENV=%WIN_SDK%\Bin\SetEnvNc.cmd
+)
 goto main
 
 :: usage: call:extract input-file output-dir
@@ -37,9 +41,10 @@ goto :EOF
 
 :: usage: call:configureWinSDK x86|x64|ia64 debug|release [/vista^|/xp^|/2003^|/2008^|/win7]
 :configureWinSDK
+if "%WIN_SDK%" EQU "" goto :EOF
 set TARGET_ARCH=/%1
 set MODE=/%2
-if "%3" == "" ( set TARGET_OS=/xp ) else set TARGET_OS=%3
+if "%3" EQU "" ( set TARGET_OS=/xp ) else set TARGET_OS=%3
 call "%SET_ENV%" %MODE% %TARGET_ARCH% %TARGET_OS%
 goto :EOF
 
