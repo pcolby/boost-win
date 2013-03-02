@@ -1,11 +1,7 @@
 @echo off
-:: Dependencies:
-::  * Microsoft Visual Studio / C++
-::  * Microsoft WinSDK
-::  * (Optional) bzip2 library http://www.bzip.org/
-::  * (Optional) Microsoft HPC Pack 2008 R2 MS-MPI Redistributed Package
-::  * (Optional) Python http://www.python.org/
-::  * (Optional) zlib library http://www.zlib.net/
+:: Script for building Boost C++ Libraries on Windows.
+:: Writen by Paul Colby (http://colby.id.au), no rights reserved ;)
+:: See http://colby.id.au/building-boost-on-windows
 
 :: The following are all required; adjust to match your setup.
 set BOOST_TOOLSET=msvc-11.0
