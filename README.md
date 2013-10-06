@@ -5,16 +5,18 @@ See [original blog post](http://colby.id.au/building-boost-on-windows) for backg
 ## Process Overview
 
 The overall build process is simple:
-1 Download and install the necessary tools.
-2 Download the sources.
-3 Download the build script.
-4 Update paths and version numbers in the build script, as necessary.
-5 Run the build script.
+
+1. Download and install the necessary tools.
+2. Download the sources.
+3. Download the build script.
+4. Update paths and version numbers in the build script, as necessary.
+5. Run the build script.
 
 The build script itself will, for each build type (release / debug, 32-bit / 64-bit):
-1 Extract the Boost source to a build sub-directory.
-2 Configure the Windows SDK for the appropriate build type, if necessary.
-3 Configure and build Boost.
+
+1. Extract the Boost source to a build sub-directory.
+2. Configure the Windows SDK for the appropriate build type, if necessary.
+3. Configure and build Boost.
 
 ## External Tools
 
@@ -46,4 +48,4 @@ My Boost build script expects to find the above sources within a source director
 The build script will create a build directory (if not already present) for the generated build files.
 
 ## See Also
-* (Building Boost on Windows)[http://colby.id.au/building-boost-on-windows]
+* [Building Boost on Windows](http://colby.id.au/building-boost-on-windows)
