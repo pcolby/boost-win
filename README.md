@@ -4,7 +4,7 @@ See [original blog post](http://colby.id.au/building-boost-on-windows) for backg
 
 ## Process Overview
 
-The overall build process is simple:
+The [build.cmd](build.cmd) script implements the following process:
 
 1. Download and install the necessary tools.
 2. Download the sources.
