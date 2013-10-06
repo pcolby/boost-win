@@ -39,11 +39,11 @@ Additionally, you can (recommended) include bzip2 and zlib sources to enable Boo
 
 My Boost build script expects to find the above sources within a source directory in its current location. The directory layout should look like:
 
-* source
- * boost_?_??_?.7z
- * bzip2-?.?.?.tar.gz
- * zlib???.zip
-* build.cmd
+* `source`
+ * `boost_?_??_?.7z`
+ * `bzip2-?.?.?.tar.gz`
+ * `zlib???.zip`
+* `build.cmd`
 
 The build script will create a build directory (if not already present) for the generated build files.
 
